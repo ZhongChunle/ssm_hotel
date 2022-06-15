@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcl.dao.RoomTypeMapper">
+    <!--编辑房间类型-->
+    <update id="updateRoomType" parameterType="com.zcl.entity.RoomType">
+        update t_room_type
+        <set>
+            <if test="typename != null and typename != ''">
+                typeName = #{typename},
+            </if>
+            <if test="photo != null and photo != ''">
+                photo = #{photo},
+            </if>
+            <if test="livenum != null">
+                liveNum = #{livenum},
+            </if>
+            <if test="bednum != null">
+                bednum = #{bednum},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="roomnum != null">
+                roomNum = #{roomnum},
+            </if>
+            <if test="reservednum != null">
+                reservednum = #{reservednum},
+            </if>
+            <if test="avilablenum != null">
+                avilablenum = #{avilablenum},
+            </if>
+            <if test="livednum != null">
+                livednum = #{livednum},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        where id = #{id};
+    </update>
+
+    <!--添加房型数据-->
+    <insert id="addRoomType" parameterType="com.zcl.entity.RoomType">
+        INSERT INTO t_room_type(typeName,photo,liveNum,bedNum,price,roomNum,reservedNum,avilableNum,livedNum,remark,status)
+        VALUES(#{typename},#{photo},#{livenum},#{bednum},#{price},#{roomnum},#{reservednum},#{avilablenum},#{livednum},#{remark},#{status})
+    </insert>
+
+    <!--查询房间类型数据列表-->
+    <select id="roomList" resultType="com.zcl.entity.RoomType">
+        select *
+        from t_room_type
+        <where>
+            <if test="typename!=null and typename != ''">
+                and typeName like concat('%',#{typename},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

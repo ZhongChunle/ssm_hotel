@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcl.dao.RoleMapper">
+
+
+    <!--添加角色数据-->
+    <insert id="addRole">
+        insert into sys_role (rolename,roledesc) values (#{roleName},#{roleDesc})
+    </insert>
+
+    <!--修改角色数据-->
+    <update id="updateRole">
+        update sys_role
+        <set>
+            <if test="roleName != null and roleName != ''">
+                    rolename = #{roleName},
+            </if>
+            <if test="roleDesc != null and roleDesc != ''">
+                    roledesc = #{roleDesc}
+            </if>
+        </set>
+        where id = #{id};
+    </update>
+
+    <!--删除角色数据-->
+    <delete id="deleteRole">
+        delete from sys_role where id = #{id}
+    </delete>
+
+    <!--查询角色信息，有模糊查询-->
+    <select id="findRoleList" resultType="com.zcl.entity.Role">
+        select * from sys_role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                and rolename like concat('%',#{roleName},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--员工初始化分配角色查询-->
+    <select id="findRoleListByMap" resultType="java.util.Map">
+        select *
+        from sys_role;
+    </select>
+
+    <select id="findEmployeeRoleByEmployeeId" resultType="java.lang.Integer">
+        select rid
+        from sys_role_employee
+        where eid = #{employeeId};
+    </select>
+</mapper>

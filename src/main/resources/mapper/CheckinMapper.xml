@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcl.dao.CheckinMapper">
+    <resultMap id="BaseResultMap" type="com.zcl.entity.Checkin">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="roomTypeId" jdbcType="INTEGER" property="roomtypeid" />
+        <result column="roomId" jdbcType="BIGINT" property="roomid" />
+        <result column="customerName" jdbcType="VARCHAR" property="customername" />
+        <result column="idCard" jdbcType="VARCHAR" property="idcard" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="arriveDate" jdbcType="TIMESTAMP" property="arrivedate" />
+        <result column="leaveDate" jdbcType="TIMESTAMP" property="leavedate" />
+        <result column="payPrice" jdbcType="DECIMAL" property="payprice" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="roomnum" jdbcType="VARCHAR" property="room" />
+        <result column="typename" jdbcType="VARCHAR" property="roomType" />
+    </resultMap>
+
+    <!--修改入住信息-->
+    <update id="updateCheckin">
+        update t_checkin
+        <set>
+            <if test="roomtypeid != null">
+                roomTypeId = #{roomtypeid},
+            </if>
+            <if test="roomid != null">
+                roomId = #{roomid},
+            </if>
+            <if test="customername != null and customername != ''">
+                customerName = #{customername},
+            </if>
+            <if test="idcard != null">
+                idCard = #{idcard},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="arrivedate != null">
+                arriveDate = #{arrivedate},
+            </if>
+            <if test="leavedate != null">
+                leaveDate = #{leavedate},
+            </if>
+            <if test="payprice != null">
+                payPrice = #{payprice},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--添加入住信息-->
+    <insert id="addCheckin">
+        insert into t_checkin (roomTypeId, roomId, customerName, idCard, phone, arriveDate, leaveDate, payPrice,status, remark,ordersId,createDate,createdBy)
+        values (#{roomtypeid},#{roomid},#{customername},#{idcard},#{phone},#{arrivedate},#{leavedate},#{payprice}
+        ,#{status},#{remark},#{ordersid},#{createdate},#{createdby});
+    </insert>
+
+    <!--分页查看入住列表-->
+    <select id="findCheckinList" resultMap="BaseResultMap">
+        select t1.*,t2.roomnum,t3.typeName
+        from t_checkin t1
+                 inner join t_room t2 on t2.id = t1.roomId
+                 inner join t_room_type t3 on t3.id = t2.roomtypeId
+        <where>
+            <if test="customername != null and customername != ''">
+                and t1.customerName = #{customername}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                and t1.idCard  = #{idcard}
+            </if>
+            <if test="phone != null and phone != ''">
+                and t1.phone = #{phone}
+            </if>
+            <if test="roomtypeid != null">
+                and t1.roomTypeId = #{roomtypeid}
+            </if>
+            <if test="status != null">
+                and t1.status = #{status}
+            </if>
+            <if test="arrivedate != null">
+               <![CDATA[and t1.arriveDate >= #{arrivedate}]]>
+            </if>
+            <if test="leavedate != null">
+                <![CDATA[and t1.leaveDate <= #{leavedate}]]>
+            </if>
+        </where>
+    </select>
+</mapper>
